@@ -65,9 +65,14 @@ while True:
     #convert to gray scale for histogram
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     #get histogram view
-    hist_view = get_histogram(gray)
+    hist_view1 = get_histogram(gray)
+    enhanced_gray = cv2.cvtColor(enhanced_frame, cv2.COLOR_BGR2GRAY)
+    hist_view2 = get_histogram(enhanced_gray)
     #resize histogram view
-    hist_view = cv2.resize(hist_view, (side_w, half_h))
+    hist_view1 = cv2.resize(hist_view1, (side_w, half_h//2))
+    hist_view2 = cv2.resize(hist_view2, (side_w, half_h//2))
+    #stack two histograms vertically to fill 1/4 frame
+    hist_view = np.vstack((hist_view1, hist_view2))
     
     
     
@@ -77,10 +82,8 @@ while True:
     #add texts to each view
     cv2.putText(enhanced_frame, 'Filtered View', (10, 30), font, font_scale, color, thickness, cv2.LINE_AA)
     cv2.putText(normal, 'Normal View', (10, 30), font, font_scale, color, thickness, cv2.LINE_AA)
-    cv2.putText(hist_view, 'Histogram View', (10, 30), font, font_scale, color, thickness, cv2.LINE_AA)
-    
-    
-    
+    cv2.putText(hist_view1, 'ORIGINAL HIST', (10, 25), font, 0.5, (0, 255, 0), 1)
+    cv2.putText(hist_view2, 'ENHANCED HIST', (10, 25), font, 0.5, (0, 255, 0), 1)
 
     # STACKING WITH NUMPY 
     # Stack the two small ones vertically (Normal on top, Histogram on bottom)
