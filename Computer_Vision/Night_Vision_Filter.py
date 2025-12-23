@@ -23,12 +23,15 @@ def get_histogram(image):
     return hist_img
 #function ends here
 
-# Define font and style
+# Defining font and style
 font = cv2.FONT_HERSHEY_SIMPLEX
 font_scale = 0.8
-color = (255, 255, 255) # White
+color = (255, 255, 255) # White font color
 thickness = 2
 
+# Create a named window for fullscreen display
+cv2.namedWindow('Night Vision Filter with Histogram', cv2.WND_PROP_FULLSCREEN)
+cv2.setWindowProperty('Night Vision Filter with Histogram', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 
 #starting loop
 while True:
@@ -37,15 +40,9 @@ while True:
     if not ret:
         break
     
-    #histogram view (1/4 of the frame)
-    #convert to gray scale for histogram
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    #get histogram view
-    hist_view = get_histogram(gray)
-    #resize histogram view
-    hist_view = cv2.resize(hist_view, (320, 240))
-    
-    
+    h, w, _ = frame.shape
+    half_h = h // 2
+    side_w = w // 3
     
     #conver to LAB
     lab = cv2.cvtColor(frame, cv2.COLOR_BGR2LAB)
@@ -59,12 +56,32 @@ while True:
     enhanced_frame = cv2.cvtColor(enhanced_lab, cv2.COLOR_LAB2BGR)
     #displaying the resulting frame (1/2 of the frame)
     #resize to half the frame
-    enhanced_frame = cv2.resize(enhanced_frame, (640, 480))
+    enhanced_frame = cv2.resize(enhanced_frame, (w - side_w, h))
+
+    
+    
+        
+    #histogram view (1/4 of the frame)
+    #convert to gray scale for histogram
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    #get histogram view
+    hist_view = get_histogram(gray)
+    #resize histogram view
+    hist_view = cv2.resize(hist_view, (side_w, half_h))
+    
+    
     
     #normal camera view (1/4 of the frame)
-    normal = cv2.resize(frame, (320, 240))
+    normal = cv2.resize(frame, (side_w, half_h))
+    
+    #add texts to each view
+    cv2.putText(enhanced_frame, 'Filtered View', (10, 30), font, font_scale, color, thickness, cv2.LINE_AA)
+    cv2.putText(normal, 'Normal View', (10, 30), font, font_scale, color, thickness, cv2.LINE_AA)
+    cv2.putText(hist_view, 'Histogram View', (10, 30), font, font_scale, color, thickness, cv2.LINE_AA)
     
     
+    
+
     # STACKING WITH NUMPY 
     # Stack the two small ones vertically (Normal on top, Histogram on bottom)
     right_column = np.vstack((normal, hist_view))
