@@ -23,7 +23,11 @@ def get_histogram(image):
     return hist_img
 #function ends here
 
-
+# Define font and style
+font = cv2.FONT_HERSHEY_SIMPLEX
+font_scale = 0.8
+color = (255, 255, 255) # White
+thickness = 2
 
 
 #starting loop
