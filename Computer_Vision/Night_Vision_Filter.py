@@ -21,7 +21,7 @@ def get_histogram(image):
     for i in range(1, 256):
         cv2.line(hist_img, (i-1, 256 - int(histogram[i-1])), (i, 256 - int(histogram[i])), (255, 255, 255), 1)
     return hist_img
-#function ends here
+#function ends here 
 
 # Defining font and style
 font = cv2.FONT_HERSHEY_SIMPLEX
@@ -82,8 +82,6 @@ while True:
     #add texts to each view
     cv2.putText(enhanced_frame, 'Filtered View', (10, 30), font, font_scale, color, thickness, cv2.LINE_AA)
     cv2.putText(normal, 'Normal View', (10, 30), font, font_scale, color, thickness, cv2.LINE_AA)
-    cv2.putText(hist_view1, 'ORIGINAL HIST', (10, 25), font, 0.5, (0, 255, 0), 1)
-    cv2.putText(hist_view2, 'ENHANCED HIST', (10, 25), font, 0.5, (0, 255, 0), 1)
 
     # STACKING WITH NUMPY 
     # Stack the two small ones vertically (Normal on top, Histogram on bottom)
