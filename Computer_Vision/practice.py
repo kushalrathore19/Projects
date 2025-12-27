@@ -24,7 +24,7 @@ while True:
         [300, 300],
         [0, 300]
     ])
-# Perspective matrix
+    
     M = cv2.getPerspectiveTransform(src, dst)
     warped = cv2.warpPerspective(frame, M, (300, 300))
 
