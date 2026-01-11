@@ -9,27 +9,12 @@ thickness = 2
 
 while True:
     ret, frame = webcam.read()
-    h, w = frame.shape[:2]
-
-    src = np.float32([
-        [100, 100],
-        [500, 100],
-        [550, 400],
-        [80, 400]
-    ])
-
-    dst = np.float32([
-        [0, 0],
-        [300, 0],
-        [300, 300],
-        [0, 300]
-    ])
-    
-    M = cv2.getPerspectiveTransform(src, dst)
-    warped = cv2.warpPerspective(frame, M, (300, 300))
-
-    cv2.imshow("Original", frame)
-    cv2.imshow("Bird View", warped)
+    hist = cv2.calcHist([frame], [0], None, [256], [0, 256])
+    hist = cv2.normalize(hist, hist).flatten()
+    screen = np.array_equal(hist, np.zeros_like(hist))
+    if screen:
+        cv2.putText(frame, 'No Signal', (50, 50), font, font_scale, color, thickness, cv2.LINE_AA)
+    cv2.imshow('Webcam Feed', frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 webcam.release()
