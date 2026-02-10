@@ -1,21 +1,26 @@
 import cv2
 import numpy as np
-webcam = cv2.VideoCapture(0)
 
-font = cv2.FONT_HERSHEY_SIMPLEX
-font_scale = 0.5
-color = (255, 292, 203) 
-thickness = 2
+cap = cv2.VideoCapture(0)
+canvas = None
+
 
 while True:
-    ret, frame = webcam.read()
-    hist = cv2.calcHist([frame], [0], None, [256], [0, 256])
-    hist = cv2.normalize(hist, hist).flatten()
-    screen = np.array_equal(hist, np.zeros_like(hist))
-    if screen:
-        cv2.putText(frame, 'No Signal', (50, 50), font, font_scale, color, thickness, cv2.LINE_AA)
-    cv2.imshow('Webcam Feed', frame)
+    ret, frame = cap.read()
+    if not ret: break
+    
+    lab = cv2.cvtColor(frame, cv2.COLOR_BGR2LAB)
+    
+    img = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    cv2.equalizeHist(img)
+    
+    cv2.imshow('Original Frame', frame)
+    cv2.waitKey(1)
+    cv2.imshow('Gray Frame', img)
+
+
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
-webcam.release()
+
+cap.release()
 cv2.destroyAllWindows()
